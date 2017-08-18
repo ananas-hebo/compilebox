@@ -7,6 +7,12 @@ FROM chug/ubuntu14.04x64
 MAINTAINER ASAD MEMON, OSMAN ALI
 
 # Update the repository sources list
+
+
+ENV TERM linux
+
+COPY sources.list /etc/apt/sources.list
+
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
 RUN apt-get update
 #RUN apt-get upgrade
@@ -33,10 +39,11 @@ RUN apt-get install -y python-software-properties
 RUN apt-get install -y software-properties-common
 
 #grab oracle java (auto accept licence)
-RUN add-apt-repository -y ppa:webupd8team/java
-RUN apt-get update
-RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-RUN apt-get install -y oracle-java7-installer
+#RUN add-apt-repository -y ppa:webupd8team/java
+#RUN apt-get update
+RUN apt-get update 
+#RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+#RUN apt-get install -y oracle-java7-installer
 
 
 RUN apt-get install -y gobjc
