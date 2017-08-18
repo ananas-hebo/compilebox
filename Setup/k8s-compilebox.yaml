@@ -1,0 +1,119 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: compilebox
+  name: compilebox
+  namespace: mooc
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: compilebox
+  template:
+    metadata:
+      labels:
+        app: compilebox
+    spec:
+      containers:
+      - name: compilebox
+        image: registry-ans.chaoxing.com/third-party/compilebox-api:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        command: ["node"]
+        args: ["/opt/servers/compilebox/compilebox/API/app.js"]
+        volumeMounts:
+        - mountPath: /etc/localtime:ro
+          name: localtime
+        - mountPath: /var/run/docker.sock
+          name: docker-sock
+        - mountPath: /usr/lib/libsystemd-journal.so.0
+          name: libsystemd-journal-so-0
+        - mountPath: /usr/lib/libsystemd-id128.so.0
+          name: libsystemd-id128-so-0
+        - mountPath: /usr/lib/libdevmapper.so.1.02
+          name: libdevmapper-so-1-02
+        - mountPath: /usr/lib/libgcrypt.so.11
+          name: libgcrypt-so-11
+        - mountPath: /usr/lib/libgpgme.so.11
+          name: libgpgme-so-11
+        - mountPath: /usr/lib/libdw.so.1
+          name: libdw-so-1
+        - mountPath: /usr/lib/libassuan.so.0
+          name: libassuan-so-0
+        - mountPath: /etc/sysconfig
+          name: sysconfig
+        - mountPath: /usr/bin/docker-current
+          name: docker-current
+        - mountPath: /usr/bin/docker
+          name: docker
+        - mountPath: /opt/servers/compilebox/compilebox
+          name: compilebox
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
+      volumes:
+      - name: localtime
+        hostPath: 
+          path: /etc/localtime
+      - name: docker-sock
+        hostPath: 
+          path: /var/run/docker.sock
+      - name: libsystemd-journal-so-0
+        hostPath: 
+          path: /lib64/libsystemd-journal.so.0
+      - name: libsystemd-id128-so-0
+        hostPath: 
+          path: /lib64/libsystemd-id128.so.0
+      - name: libdevmapper-so-1-02
+        hostPath: 
+          path: /lib64/libdevmapper.so.1.02
+      - name: libgcrypt-so-11
+        hostPath: 
+          path: /lib64/libgcrypt.so.11
+      - name: libgpgme-so-11
+        hostPath: 
+          path: /lib64/libgpgme.so.11
+      - name: libassuan-so-0
+        hostPath: 
+          path: /lib64/libassuan.so.0
+      - name: libdw-so-1
+        hostPath: 
+          path: /lib64/libdw.so.1
+      - name: sysconfig
+        hostPath: 
+          path: /etc/sysconfig
+      - name: docker-current
+        hostPath: 
+          path: /usr/bin/docker-current
+      - name: docker
+        hostPath: 
+          path: /usr/bin/docker
+      - name: compilebox
+        hostPath: 
+          path: /opt/servers/compilebox/compilebox      
+      nodeSelector:
+        compilebox: app
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: compilebox
+  name: compilebox
+  namespace: mooc
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    nodePort : 30014
+  selector:
+    app: compilebox
