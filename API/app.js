@@ -45,7 +45,7 @@ app.post('/compile', bruteforce.prevent, function (req, res) {
 
 	var folder = 'temp/' + random(10); //folder in which the temporary folder will be saved
 	var path = __dirname + "/"; //current working path
-	var vm_name = 'registry-ans.chaoxing.com/third-party/compilebox:v1'; //name of virtual machine that we want to execute
+	var vm_name = 'registry-ans.chaoxing.com/third-party/compilebox:v2'; //name of virtual machine that we want to execute
 	var timeout_value = 10; //Timeout Value, In Seconds
 
 	//details of this are present in DockerSandbox.js
