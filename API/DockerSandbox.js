@@ -124,7 +124,11 @@ DockerSandbox.prototype.execute = function (success) {
 	console.log(st);
 
 	//execute the Docker, This is done ASYNCHRONOUSLY
-	exec(st);
+	exec(st, function (error) {
+		if (error) {
+			console.log(error);
+		}
+	});
 	console.log("------------------------------")
 		//Check For File named "completed" after every 1 second
 	var intid = setInterval(function () {
@@ -134,7 +138,6 @@ DockerSandbox.prototype.execute = function (success) {
 		myC = myC + 1;
 
 		fs.readFile(sandbox.path + sandbox.folder + '/completed', 'utf8', function (err, data) {
-			console.log('completed path = ' + sandbox.path + sandbox.folder + '/completed');
 
 			//if file is not available yet and the file interval is not yet up carry on
 			if (err && myC < sandbox.timeout_value) {
@@ -192,10 +195,10 @@ DockerSandbox.prototype.execute = function (success) {
 
 
 			//now remove the temporary directory
-			console.log("ATTEMPTING TO REMOVE: " + sandbox.folder);
+			console.log("ATTEMPTING TO REMOVE: " +sandbox.path +  sandbox.folder);
 			console.log("------------------------------")
 				// for test 
-			exec("rm -r " + sandbox.folder);
+			exec("rm -r " + sandbox.path + sandbox.folder);
 
 			clearInterval(intid);
 		});
