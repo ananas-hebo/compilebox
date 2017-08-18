@@ -1,10 +1,13 @@
 #!/bin/bash
-set -e
 
+
+set -e
 to=$1
+
 shift
 
-cont=$(docker run -d "$@")
+cont=$(docker run -d --memory=100m  --cpu-period=100000 --cpu-quota=200000 "$@")
+#cont=$(docker run -d "$@")
 code=$(timeout "$to" docker wait "$cont" || true)
 
 docker kill $cont &> /dev/null
