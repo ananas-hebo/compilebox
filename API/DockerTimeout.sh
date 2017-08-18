@@ -4,8 +4,9 @@ set -e
 to=$1
 shift
 
-cont=$(docker run --rm  "$@")
+cont=$(docker run -d "$@")
 code=$(timeout "$to" docker wait "$cont" || true)
+
 docker kill $cont &> /dev/null
 echo -n 'status: '
 if [ -z "$code" ]; then
