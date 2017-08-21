@@ -1,3 +1,5 @@
+#FROM https://github.com/ananas-hebo/compilebox
+
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
